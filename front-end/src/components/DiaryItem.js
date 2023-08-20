@@ -11,14 +11,15 @@ const DiaryItem = ({ token, myPin, fetchMyPins, username }) => {
   const id = myPin._id;
   const userToken = myPin.token;
 
-  const updatePin = async () => {
+  const updatePin = async (e) => {
     // fetch PUT method with data variable filled with the new title value
+    e.preventDefault();
     if (token === userToken) {
       await fetch(`/api/pins/update/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          // "Authorization": `Bearer ${token}`,
           token: token,
         },
         body: JSON.stringify({
@@ -49,18 +50,12 @@ const DiaryItem = ({ token, myPin, fetchMyPins, username }) => {
     }
   };
 
-  const handleUpdatePin = (e) => {
-    e.preventDefault();
-    // run update function
-    updatePin();
-  };
-
   const deletePin = async () => {
     if (token === userToken) {
       await fetch(`api/pins/delete/${id}`, {
         method: "DELETE",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          // "Authorization": `Bearer ${token}`,
           token: token,
         },
       });
@@ -81,15 +76,17 @@ const DiaryItem = ({ token, myPin, fetchMyPins, username }) => {
   // if edit state is true than display fields to edit values for project
   if (edit) {
     return (
-      <div className="d-flex justify-content-between">
-        <form className="form-inline mt-3 mb-3">
+      <div className="Card">
+        <form className="form_center">
+          <h4>Title</h4>
           <input
             id="editTitle"
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
             placeholder="Edit diary title"
           />
-          <input
+          <h4>Diary</h4>
+          <textarea
             id="editDesc"
             value={newDesc}
             onChange={(e) => setNewDesc(e.target.value)}
@@ -97,7 +94,7 @@ const DiaryItem = ({ token, myPin, fetchMyPins, username }) => {
           />
           <button
             className="btn btn-primary mb-2"
-            onClick={handleUpdatePin}
+            onClick={updatePin}
             type="submit"
             id="submitButton"
           >

@@ -62,7 +62,7 @@ const Login = () => {
             width="150px"
             alt="logo icon"
           />
-          <h2>My Travel Diaries</h2>
+          <h2>My Travel Diary</h2>
         </div>
       </Row>
       <Row className="space-above">

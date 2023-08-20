@@ -44,7 +44,7 @@ router.delete("/delete/:_id", async (req, res) => {
 
     if (!deletedPin) {
       // send error message if there is an error
-      res.status(404).send("Pin is not found");
+      res.status(404).json({ message: "Pin is not found" });
       return;
     }
     // else successfully delete object by ID
@@ -52,6 +52,39 @@ router.delete("/delete/:_id", async (req, res) => {
       res.status(200).json({
         message: "Pin deleted",
         pin: deletedPin,
+      });
+    }
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+// PUT method to update document by ID
+router.put("/update/:_id", async (req, res) => {
+  // find pin by ID method and update
+  try {
+    const updatePin = await Pin.findByIdAndUpdate(
+      req.params._id,
+      // get parameters from document data
+      {
+        title: req.body.newTitle,
+        desc: req.body.newDesc,
+      },
+      {
+        new: true,
+        returnDocument: "after",
+      }
+    );
+    // send 404 error message to indicate nothing was found
+    if (!updatePin) {
+      res.status(404).send("Sorry, no matching diary found");
+      return;
+    }
+    // else successfully update object by ID
+    else {
+      res.status(200).json({
+        message: "Diary updated",
+        pin: updatePin,
       });
     }
   } catch (err) {

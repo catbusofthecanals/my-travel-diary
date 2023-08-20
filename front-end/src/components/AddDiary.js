@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -13,7 +13,7 @@ const AddDiary = () => {
   const [token, setToken] = useState("");
   const [username, setUsername] = useState("");
   const [admin, setAdmin] = useState(false);
-  const [currentPlaceId, setCurrentPlaceId] = useState(null);
+  const [currentPlace, setCurrentPlace] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
   const [location, setLocation] = useState("");
   const [title, setTitle] = useState("");
@@ -58,61 +58,6 @@ const AddDiary = () => {
     fetchMyPins();
   }, [userUN, userTkn, userAdmin, fetchMyPins]);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    userSearch();
-  };
-
-  // use API to get lat long co-ordinates from input location
-  async function userSearch() {
-    const options = {
-      method: "GET",
-      headers: {
-        "X-RapidAPI-Key": "67e9cf954dmsha2b8bd42556b4b2p11357bjsn57ff88883aae",
-        "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
-      },
-    };
-
-    await fetch(
-      `https://wft-geo-db.p.rapidapi.com/v1/geo/places?namePrefix=${location}`,
-      options
-    )
-      .then((res) => res.json())
-      .then(
-        (res) => {
-          //assigned the information needed to variables
-
-          setNewPlace({
-            lat: res.data[0].latitude,
-            long: res.data[0].longitude,
-          });
-
-          return new Promise(function (resolve, reject) {
-            setTimeout(() => {
-              resolve();
-            }, 1100);
-          });
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-
-    alert(newPlace.lat);
-    alert(newPlace.long);
-    setViewState({
-      ...viewState,
-      latitude: newPlace.lat,
-      longitude: newPlace.long,
-    });
-    setLocation("");
-  }
-
-  const handleAddDiary = (e) => {
-    e.preventDefault();
-    addDiary();
-  };
-
   // handle logging out by setting states to null and navigating to home page
   const handleLogOut = (e) => {
     setUsername("");
@@ -120,12 +65,17 @@ const AddDiary = () => {
     navigate("/");
   };
 
-  const addDiary = async () => {
+  const addDiary = async (e) => {
+    e.preventDefault();
     let lat = newPlace.lat;
     let long = newPlace.long;
+    console.log(lat);
+    console.log(long);
 
     if (token === "") {
       alert("Please log in to add a todo");
+    } else if (lat === null || long === null) {
+      alert("Please choose a location before submitting an entry");
     } else {
       // fetch function with post method and token
       const newPin = {
@@ -140,7 +90,7 @@ const AddDiary = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          // "Authorization": `Bearer ${token}`,
           token: token,
         },
         body: JSON.stringify({ newPin }),
@@ -162,11 +112,37 @@ const AddDiary = () => {
     });
   };
 
-  // when clicking on a marker, set current place and viewstate to current lat and long
-  const handleMarkerClick = (_id, lat, long) => {
-    setCurrentPlaceId(_id);
-    setViewState({ ...viewState, latitude: lat, longitude: long });
-  };
+  // set variable for markers for pins
+  const myMarkers = useMemo(() =>
+    myPins.map((myPin) => (
+      <Marker
+        onClick={(e) => {
+          /* was having an issue of the pop ups working but researched and learned that stopPropagation stops the pop ups from automatically closing
+          Available here: https://github.com/visgl/react-map-gl/blob/7.1-release/examples/controls/src/app.tsx
+          */
+          e.originalEvent.stopPropagation();
+          // set information for current pin in state
+          setCurrentPlace(myPin);
+          setViewState({
+            ...viewState,
+            latitude: myPin.lat,
+            longitude: myPin.long,
+          });
+        }}
+        key={myPin._id}
+        longitude={myPin.long}
+        latitude={myPin.lat}
+      >
+        <RoomIcon
+          style={{
+            fontSize: 8 * viewState.zoom,
+            color: username === myPin.username ? "tomato" : "slateblue",
+            cursor: "pointer",
+          }}
+        />
+      </Marker>
+    ))
+  );
 
   return (
     <div>
@@ -192,7 +168,7 @@ const AddDiary = () => {
                 placeholder="Enter a location"
               />
               <button
-                onClick={handleSearch}
+                // onClick={handleSearch}
                 className="submitButton"
                 type="submit"
               >
@@ -226,46 +202,27 @@ const AddDiary = () => {
                     <div>Add an entry for this location below!</div>
                   </Popup>
                 )}
-                {/* if there are pins, map array to display marker and pop up*/}
-                {myPins &&
-                  myPins.map((myPin) => (
-                    <>
-                      <Marker
-                        key={myPin._id}
-                        longitude={myPin.long}
-                        latitude={myPin.lat}
-                      >
-                        <RoomIcon
-                          style={{
-                            fontSize: 8 * viewState.zoom,
-                            color: "tomato",
-                            cursor: "pointer",
-                          }}
-                          onClick={() =>
-                            handleMarkerClick(myPin._id, myPin.lat, myPin.long)
-                          }
-                        />
-                      </Marker>
-                      {currentPlaceId === myPin._id && (
-                        <Popup
-                          longitude={myPin.long}
-                          latitude={myPin.lat}
-                          anchor="left"
-                          onClose={() => setCurrentPlaceId(null)}
-                        >
-                          <div className="card">
-                            <label>Place:</label>
-                            <h4>{myPin.title}</h4>
-                            <label>My Diary:</label>
-                            <p>{myPin.desc}</p>
-                            <span className="username">
-                              Written by {myPin.username}
-                            </span>
-                          </div>
-                        </Popup>
-                      )}
-                    </>
-                  ))}
+                {/* if there are pins, map array to display myMarkers*/}
+                {myMarkers}
+                {/* if a pin exists in current place state, display pop up */}
+                {currentPlace && (
+                  <Popup
+                    longitude={currentPlace.long}
+                    latitude={currentPlace.lat}
+                    anchor="left"
+                    onClose={() => setCurrentPlace(null)}
+                  >
+                    <div className="card">
+                      <label>Place:</label>
+                      <h4>{currentPlace.title}</h4>
+                      <label>My Diary:</label>
+                      <p>{currentPlace.desc}</p>
+                      <span className="username">
+                        Written by {currentPlace.username}
+                      </span>
+                    </div>
+                  </Popup>
+                )}
               </Map>
             </Container>
           </Col>
@@ -275,7 +232,7 @@ const AddDiary = () => {
           <Col></Col>
           <Col xs={6}>
             <Container className="wb">
-              <form className="form_center" onSubmit={handleAddDiary}>
+              <form className="form_center" onSubmit={addDiary}>
                 <h4>Title</h4>
                 <input
                   placeholder="Enter Title"

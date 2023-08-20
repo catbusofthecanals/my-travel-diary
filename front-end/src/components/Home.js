@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import NavBar from "../components/NavBar/NavBar";
@@ -12,8 +12,10 @@ const Home = () => {
   const [token, setToken] = useState("");
   const [username, setUsername] = useState("");
   const [admin, setAdmin] = useState(false);
-  const [currentPlaceId, setCurrentPlaceId] = useState(null);
-  const [newPlace, setNewPlace] = useState(null);
+  const [currentPlace, setCurrentPlace] = useState(null);
+  const [newLat, setNewLat] = useState(null);
+  const [newLong, setNewLong] = useState(null);
+
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [pins, setPins] = useState([]);
@@ -36,7 +38,6 @@ const Home = () => {
   const fetchPins = useCallback(async () => {
     // if the value of token isn't null then run request
     if (token !== "") {
-      console.log(admin);
       try {
         // GET method to fetch pins
         const result = await fetch("/api/pins", {
@@ -55,7 +56,7 @@ const Home = () => {
         console.log(err);
       }
     }
-  }, [token, admin]);
+  }, [token]);
 
   // add dependencies
   useEffect(() => {
@@ -76,23 +77,52 @@ const Home = () => {
 
   // on click of map set lat and long in new place state
   const handleAddClick = (e) => {
-    setNewPlace({
-      lat: e.lngLat.lat,
-      long: e.lngLat.lng,
+    console.log(e);
+    setNewLat({
+      lat: Number(e.lngLat.lat),
+    });
+    setNewLong({
+      long: Number(e.lngLat.lng),
     });
   };
 
-  // when clicking on a marker, set current place and viewstate to current lat and long
-  const handleMarkerClick = (_id, lat, long) => {
-    setCurrentPlaceId(_id);
-    setViewState({ ...viewState, latitude: lat, longitude: long });
-  };
+  // set variable for markers for pins
+  const markers = useMemo(() =>
+    pins.map((pin) => (
+      <Marker
+        onClick={(e) => {
+          /* was having an issue of the pop ups working but researched and learned that stopPropagation stops the pop ups from automatically closing
+          Available here: https://github.com/visgl/react-map-gl/blob/7.1-release/examples/controls/src/app.tsx
+          */
+          e.originalEvent.stopPropagation();
+          // set information for current pin in state
+          setCurrentPlace(pin);
+          setViewState({
+            ...viewState,
+            latitude: pin.lat,
+            longitude: pin.long,
+          });
+        }}
+        key={pin._id}
+        longitude={pin.long}
+        latitude={pin.lat}
+      >
+        <RoomIcon
+          style={{
+            fontSize: 8 * viewState.zoom,
+            color: username === pin.username ? "tomato" : "slateblue",
+            cursor: "pointer",
+          }}
+        />
+      </Marker>
+    ))
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let lat = newPlace.lat;
-    let long = newPlace.long;
+    let lat = Number(newLat.lat);
+    let long = Number(newLong.long);
 
     const newPin = {
       username: username,
@@ -116,7 +146,8 @@ const Home = () => {
         body: JSON.stringify(newPin),
       });
       setPins([...pins, res]);
-      setNewPlace(null);
+      setNewLat(null);
+      setNewLong(null);
       setTitle("");
       setDesc("");
     } catch (err) {
@@ -145,12 +176,15 @@ const Home = () => {
             mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
           >
             {/* if a new place has a lat long value, show pop up*/}
-            {newPlace && (
+            {newLat && newLong && (
               <Popup
-                longitude={newPlace.long}
-                latitude={newPlace.lat}
+                longitude={newLong.long}
+                latitude={newLat.lat}
                 anchor="left"
-                onClose={() => setNewPlace(null)}
+                onClose={() => {
+                  setNewLat(null);
+                  setNewLong(null);
+                }}
               >
                 <div>
                   <form className="form" onSubmit={handleSubmit}>
@@ -173,43 +207,27 @@ const Home = () => {
                 </div>
               </Popup>
             )}
-            {/* if there are pins, map array to display marker and pop up*/}
-            {pins &&
-              pins.map((pin) => (
-                <>
-                  <Marker key={pin._id} longitude={pin.long} latitude={pin.lat}>
-                    <RoomIcon
-                      style={{
-                        fontSize: 8 * viewState.zoom,
-                        color:
-                          username === pin.username ? "tomato" : "slateblue",
-                        cursor: "pointer",
-                      }}
-                      onClick={() =>
-                        handleMarkerClick(pin._id, pin.lat, pin.long)
-                      }
-                    />
-                  </Marker>
-                  {currentPlaceId === pin._id && (
-                    <Popup
-                      longitude={pin.long}
-                      latitude={pin.lat}
-                      anchor="left"
-                      onClose={() => setCurrentPlaceId(null)}
-                    >
-                      <div className="card">
-                        <label>Place:</label>
-                        <h4>{pin.title}</h4>
-                        <label>My Diary:</label>
-                        <p>{pin.desc}</p>
-                        <span className="username">
-                          Written by {pin.username}
-                        </span>
-                      </div>
-                    </Popup>
-                  )}
-                </>
-              ))}
+            {/* if there are pins, map array to display markers*/}
+            {markers}
+            {/* if a pin exists in current place state, display pop up */}
+            {currentPlace && (
+              <Popup
+                longitude={Number(currentPlace.long)}
+                latitude={Number(currentPlace.lat)}
+                anchor="left"
+                onClose={() => setCurrentPlace(null)}
+              >
+                <div className="card">
+                  <label>Place:</label>
+                  <h4>{currentPlace.title}</h4>
+                  <label>My Diary:</label>
+                  <p>{currentPlace.desc}</p>
+                  <span className="username">
+                    Written by {currentPlace.username}
+                  </span>
+                </div>
+              </Popup>
+            )}
           </Map>
 
           <button className="button" onClick={handleLogOut}>
