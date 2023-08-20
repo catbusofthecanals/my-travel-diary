@@ -145,7 +145,8 @@ const Home = () => {
         },
         body: JSON.stringify(newPin),
       });
-      setPins([...pins, res]);
+      // call fetch pins function
+      fetchPins();
       setNewLat(null);
       setNewLong(null);
       setTitle("");

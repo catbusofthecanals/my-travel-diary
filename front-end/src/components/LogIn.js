@@ -100,6 +100,7 @@ const Login = () => {
         </Col>
         <Col xs={1}></Col>
         <Col xs={4}>
+          {/* was following instructions to provide Fb/Google logins but found these have currently been depreciated as of earlier this year */}
           <div className="LoginCard">
             <GoogleOAuthProvider clientId={process.env.REACT_APP_CLIENT_ID}>
               <Google />

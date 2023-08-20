@@ -2,7 +2,7 @@ const { OAuth2Client } = require("google-auth-library");
 const User = require("../models/User");
 const router = require("express").Router();
 
-/* followed a tutorial for integrating Google login here https://dev.to/shaancodes/how-to-implement-google-authentication-in-your-react-applications-jb6 */
+/* was following a tutorial for integrating Google login but found out API is now depreciated https://dev.to/shaancodes/how-to-implement-google-authentication-in-your-react-applications-jb6 */
 const googleClient = new OAuth2Client({
   clientId: `${process.env.GOOGLE_CLIENT_ID}`,
   clientSecret: `${process.env.GOOGLE_CLIENT_SECRET}`,

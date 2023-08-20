@@ -14,6 +14,8 @@ const DiaryItem = ({ token, myPin, fetchMyPins, username }) => {
   const updatePin = async (e) => {
     // fetch PUT method with data variable filled with the new title value
     e.preventDefault();
+    console.log(token);
+    console.log(userToken);
     if (token === userToken) {
       await fetch(`/api/pins/update/${id}`, {
         method: "PUT",
@@ -50,9 +52,10 @@ const DiaryItem = ({ token, myPin, fetchMyPins, username }) => {
     }
   };
 
-  const deletePin = async () => {
+  const deletePin = async (e) => {
+    e.preventDefault();
     if (token === userToken) {
-      await fetch(`api/pins/delete/${id}`, {
+      await fetch(`/api/pins/delete/${id}`, {
         method: "DELETE",
         headers: {
           // "Authorization": `Bearer ${token}`,
@@ -65,12 +68,6 @@ const DiaryItem = ({ token, myPin, fetchMyPins, username }) => {
       alert("You can only delete your own diaries");
       fetchMyPins();
     }
-  };
-
-  const handleDeletePin = (e) => {
-    e.preventDefault();
-    // run delete function
-    deletePin();
   };
 
   // if edit state is true than display fields to edit values for project
@@ -125,7 +122,7 @@ const DiaryItem = ({ token, myPin, fetchMyPins, username }) => {
         <button className="button" onClick={(e) => setEdit(true)}>
           Edit
         </button>
-        <button onClick={handleDeletePin} className="button">
+        <button onClick={deletePin} className="button">
           Delete
         </button>
       </div>

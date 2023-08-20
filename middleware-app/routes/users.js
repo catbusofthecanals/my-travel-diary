@@ -66,7 +66,7 @@ router.post("/login", async (req, res) => {
           password: User.password,
         },
         "secretKey",
-        { expiresIn: "24h" }
+        { expiresIn: "96h" }
       );
       res.send({ message: jwtToken, user: user });
     } else {

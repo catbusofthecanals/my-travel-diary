@@ -5,6 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import NavBar from "../components/NavBar/NavBar";
 import Map, { Marker, Popup } from "react-map-gl";
+import MapboxAutocomplete from "react-mapbox-autocomplete";
 import RoomIcon from "@mui/icons-material/Room";
 import "../App.css";
 
@@ -15,7 +16,6 @@ const AddDiary = () => {
   const [admin, setAdmin] = useState(false);
   const [currentPlace, setCurrentPlace] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
-  const [location, setLocation] = useState("");
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [myPins, setMyPins] = useState([]);
@@ -58,6 +58,24 @@ const AddDiary = () => {
     fetchMyPins();
   }, [userUN, userTkn, userAdmin, fetchMyPins]);
 
+  const mapAccess = {
+    mapboxApiAccessToken: `${process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}`,
+  };
+
+  /* Found a mapbox autocomplete tutorial for users to search location via input, available here: https://codesandbox.io/s/mapbox-address-autocomplete-pb14w?file=/src/index.tsx:594-689 */
+  function _suggestionSelect(result, lat, long, text) {
+    console.log(result, lat, long, text);
+    setNewPlace({
+      lat: Number(lat),
+      long: Number(long),
+    });
+    setViewState({
+      ...viewState,
+      latitude: lat,
+      longitude: long,
+    });
+  }
+
   // handle logging out by setting states to null and navigating to home page
   const handleLogOut = (e) => {
     setUsername("");
@@ -65,16 +83,19 @@ const AddDiary = () => {
     navigate("/");
   };
 
+  // function to add diary entry
   const addDiary = async (e) => {
     e.preventDefault();
     let lat = newPlace.lat;
     let long = newPlace.long;
     console.log(lat);
     console.log(long);
-
+    // if token is null display alert
     if (token === "") {
       alert("Please log in to add a todo");
-    } else if (lat === null || long === null) {
+    }
+    // if lat and long values are null as user hasn't selected location display alert
+    else if (lat === null || long === null) {
       alert("Please choose a location before submitting an entry");
     } else {
       // fetch function with post method and token
@@ -86,21 +107,26 @@ const AddDiary = () => {
         lat: lat,
         long: long,
       };
-      const res = await fetch("/add/new", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // "Authorization": `Bearer ${token}`,
-          token: token,
-        },
-        body: JSON.stringify({ newPin }),
-      })
-        .then((res) => res.json())
-        .catch((error) => console.log("Error:", error));
-      setMyPins([...myPins, res]);
-      setNewPlace(null);
-      setTitle("");
-      setDesc("");
+      console.log(newPin);
+
+      try {
+        const res = await fetch("/api/pins", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            //"Authorization": `Bearer ${token}`,
+            token: token,
+          },
+          body: JSON.stringify(newPin),
+        });
+        // call fetch user pins function
+        fetchMyPins();
+        setNewPlace(null);
+        setTitle("");
+        setDesc("");
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
@@ -161,19 +187,26 @@ const AddDiary = () => {
                 Enter a location below or click on the map to write your diary
                 entry:
               </p>
-              <input
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                text="text"
-                placeholder="Enter a location"
-              />
-              <button
-                // onClick={handleSearch}
-                className="submitButton"
-                type="submit"
+
+              <div
+                component="form"
+                sx={{
+                  padding: "2px 4px",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
               >
-                Search Location
-              </button>
+                <RoomIcon />
+
+                <MapboxAutocomplete
+                  publicKey={mapAccess.mapboxApiAccessToken}
+                  inputClass="form-control search"
+                  onSuggestionSelect={_suggestionSelect}
+                  resetSearch={false}
+                  placeholder="Search location..."
+                />
+              </div>
             </Container>
           </Col>
           <Col></Col>

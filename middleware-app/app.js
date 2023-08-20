@@ -36,32 +36,6 @@ const userRoute = require("./routes/users");
 const pinRoute = require("./routes/pins");
 const authRoute = require("./routes/auth");
 
-/* search GeoDB Rapid API using GET request
-app.get(`/search`, (req, res) => {
-  // get search parameters from user input on front end
-  const location = req.query.location;
-
-  // fetch request to iTunes API using the term and media type input by user
-  fetch(
-    `https://wft-geo-db.p.rapidapi.com/v1/geo/places?namePrefix=${location}`
-  )
-    .then((result) => result.json())
-    .then((response) => {
-      // if search was successful send response
-      res.send({ response });
-      return new Promise(function (resolve, reject) {
-        setTimeout(() => {
-          resolve();
-        }, 1100);
-      });
-    })
-
-    .catch((error) => {
-      // otherwise if error send error message, have to send as JSON message rather than string to avoid error
-      res.send({ message: "Error" });
-    });
-}); */
-
 // add routes and custom middleware
 app.use("/api/users", userRoute);
 app.use("/api/auth", authRoute);
