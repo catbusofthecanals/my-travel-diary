@@ -6,7 +6,7 @@ This final capstone project is to design and create a full-stack web application
 
 The project has been tested with a snapshot test and unit tests for the front and back-end.
 
-The deployed render app for this project can be found here: and the sources files can be found on github here: https://github.com/catbusofthecanals/my-travel-diary.
+The sources files can be found on github here: https://github.com/catbusofthecanals/my-travel-diary.
 
 ## Requirements
 
