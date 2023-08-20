@@ -42,6 +42,18 @@ const SideBar = ({ username, token, handleLogOut, admin, pins }) => {
       },
     });
   };
+
+  // function to handle navigation to help component, pass props as state
+  const navHelp = (e) => {
+    e.preventDefault();
+    navigate("/home/help", {
+      state: {
+        username: username,
+        token: token,
+        admin: admin,
+      },
+    });
+  };
   // if user is an admin show hidden admin area
   if (admin === true) {
     return (
@@ -58,6 +70,10 @@ const SideBar = ({ username, token, handleLogOut, admin, pins }) => {
         {/* navigate to admin area component */}
         <Link className="menu-item" onClick={navAdminArea} to="/home/admin">
           Admin Area
+        </Link>
+        {/* navigate to admin area component */}
+        <Link className="menu-item" onClick={navHelp} to="/home/help">
+          Help
         </Link>
         {/* call log out function */}
         <Link className="button" to="/" onClick={handleLogOut}>
@@ -78,6 +94,10 @@ const SideBar = ({ username, token, handleLogOut, admin, pins }) => {
         {/* navigate to my diary list component */}
         <Link className="menu-item" onClick={navMyDiaries} to="/home/diaries">
           My Travel Diaries
+        </Link>
+        {/* navigate to admin area component */}
+        <Link className="menu-item" onClick={navHelp} to="/home/help">
+          Help
         </Link>
         {/* call log out function */}
         <Link className="button" to="/" onClick={handleLogOut}>

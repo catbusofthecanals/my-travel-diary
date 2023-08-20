@@ -3,6 +3,7 @@ import Registration from "../src/components/Registration";
 import AddDiary from "../src/components/AddDiary";
 import DiaryList from "../src/components/DiaryList";
 import Home from "./components/Home";
+import Help from "./components/Help";
 import AdminArea from "./components/AdminArea";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -17,6 +18,7 @@ function App() {
         <Route path="/home/add" element={<AddDiary />} />
         <Route path="/home/diaries" element={<DiaryList />} />
         <Route path="/home/admin" element={<AdminArea />} />
+        <Route path="/home/help" element={<Help />} />
         <Route exact path="/home" element={<Home />} />
       </Routes>
     </div>

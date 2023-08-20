@@ -5,6 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import home from "../../images/home.svg";
 import SideBar from "../SideBar/SideBar";
+import Search from "../Search";
 import Logo from "../../images/logo.png";
 
 const NavBar = ({ username, token, handleLogOut, admin, pins }) => {
@@ -46,12 +47,7 @@ const NavBar = ({ username, token, handleLogOut, admin, pins }) => {
             />
           </Col>
           <Col className="t-left" xs={2}>
-            {" "}
-            <input
-              text="text"
-              className="navbar_searchBar"
-              placeholder="Search"
-            />
+            <Search pins={pins} />
           </Col>
           <Col xs={4}></Col>
           <Col xs={3} className="t-right" style={{ display: "flex" }}>

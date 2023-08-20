@@ -1,0 +1,127 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<section>
+  <div
+    className="header row"
+  >
+    <div
+      className="text-center"
+    >
+      <img
+        alt="logo icon"
+        className="header-img"
+        src="logo.png"
+        width="150px"
+      />
+      <h2>
+        My Travel Diary
+      </h2>
+    </div>
+  </div>
+  <div
+    className="space-above row"
+  >
+    <div
+      className="text-center"
+    >
+      <form
+        onSubmit={[Function]}
+      >
+        <p
+          className="has-text-centered"
+        />
+        <div
+          className="field mt-5"
+        >
+          <label
+            className="label"
+          >
+            Name
+          </label>
+          <div
+            className="controls"
+          >
+            <input
+              className="input"
+              onChange={[Function]}
+              placeholder="Username"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          className="field mt-5"
+        >
+          <label
+            className="label"
+          >
+            Email
+          </label>
+          <div
+            className="controls"
+          >
+            <input
+              className="input"
+              onChange={[Function]}
+              placeholder="Email"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          className="field mt-5"
+        >
+          <label
+            className="label"
+          >
+            Password
+          </label>
+          <div
+            className="controls"
+          >
+            <input
+              className="input"
+              onChange={[Function]}
+              placeholder="******"
+              type="password"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          className="field mt-5"
+        >
+          <label
+            className="label"
+          >
+            Confirm Password
+          </label>
+          <div
+            className="controls"
+          >
+            <input
+              className="input"
+              onChange={[Function]}
+              placeholder="******"
+              type="password"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          className="field mt-5"
+        >
+          <button
+            className="button is-success is-fullwidth"
+          >
+            Register
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+`;

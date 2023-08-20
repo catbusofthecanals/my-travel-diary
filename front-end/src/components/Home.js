@@ -136,7 +136,7 @@ const Home = () => {
     console.log(newPin);
 
     try {
-      const res = await fetch("/api/pins", {
+      await fetch("/api/pins", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
