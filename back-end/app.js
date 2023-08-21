@@ -30,7 +30,7 @@ const dbConnect = require("./db/dbConnect");
 // excecute database connection
 dbConnect();
 
-let { checkJWTToken } = require("../middleware-app/middleware");
+let { checkJWTToken } = require("./middleware");
 
 const userRoute = require("./routes/users");
 const pinRoute = require("./routes/pins");
