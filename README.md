@@ -27,7 +27,7 @@ To run this project:
 
 1. Download this directory, "my-travel-diary", to your local machine
 2. Navigate to this directory from the command line interface. E.g. cd c:/my-travel-diary
-3. To start the backend server application, navigate to middleware-app, install any dependencies by typing "npm install" and start by typing "npm start"
+3. To start the backend server application, navigate to /back-end, install any dependencies by typing "npm install" and start by typing "npm start"
 4. Now open a new terminal shell and navigate to the "/front-end" directory
 5. Again nstall any dependencies by typing "npm install" and then type 'npm start' to start the front-end application
 6. Open [http://localhost:3000](http://localhost:3000) to view in your browser
@@ -38,7 +38,7 @@ For this web application you will need to also create dotenv files containing a 
 
 To create a MongoDB URL:
 
-Create a mongodb account at https://www.mongodb.com/ and then create a free shared cluster. Select Connect -> Connect your application and then the connection string into the application. Then create a .env file in the middleware-app directory with DB_URL= "paste the mongodb connection string"
+Create a mongodb account at https://www.mongodb.com/ and then create a free shared cluster. Select Connect -> Connect your application and then the connection string into the application. Then create a .env file in the /back-end directory with DB_URL= "paste the mongodb connection string"
 
 To setup Mapbox and Get Access Token:
 
@@ -95,9 +95,9 @@ To test this project, I have used a unit test and a snapshot test to test the fr
 
 ### Running the Tests
 
-To test the front-end, navigate to the front-end directory and type 'npm test'. The tests will run and you'll see the results once they have completed. This will run the snapshot test and unit test in App.test.js.
+To test the front-end, navigate to the /front-end directory and type 'npm test'. The tests will run and you'll see the results once they have completed. This will run the snapshot test and unit test in App.test.js.
 
-To test the back-end server, navigate to the middleware-app directory and type 'npm test'. This will run app.test.js which tests the response of the GET request for /api/pins.
+To test the back-end server, navigate to the /back-end directory and type 'npm test'. This will run app.test.js which tests the response of the GET request for /api/pins.
 
 ## Security
 
