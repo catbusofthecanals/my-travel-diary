@@ -52,7 +52,7 @@ const Login = () => {
     setMsg([]);
   }
 
-  /* A test admin user has been created at username = "admin" and password = 'password' */
+  /* A test admin user has been created at username = "admin" and password = "password" */
   return (
     <section>
       <Row className="header">

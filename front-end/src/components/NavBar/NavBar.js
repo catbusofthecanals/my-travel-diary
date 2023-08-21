@@ -5,7 +5,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import home from "../../images/home.svg";
 import SideBar from "../SideBar/SideBar";
-import Search from "../Search";
 import Logo from "../../images/logo.png";
 
 const NavBar = ({ username, token, handleLogOut, admin, pins }) => {
@@ -46,9 +45,7 @@ const NavBar = ({ username, token, handleLogOut, admin, pins }) => {
               alt="logo icon"
             />
           </Col>
-          <Col className="t-left" xs={2}>
-            <Search pins={pins} />
-          </Col>
+          <Col xs={2}></Col>
           <Col xs={4}></Col>
           <Col xs={3} className="t-right" style={{ display: "flex" }}>
             {/* display welcome message to current user */}
