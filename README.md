@@ -6,7 +6,7 @@ This final capstone project is to design and create a full-stack web application
 
 The project has been tested with a snapshot test and unit tests for the front and back-end.
 
-The deployed render app for this project can be found here: and the sources files can be found on github here: https://github.com/catbusofthecanals/my-travel-diary.
+The app has been deployed on Render at https://my-travel-diary.onrender.com/ and source files can be found on github here: https://github.com/catbusofthecanals/my-travel-diary.
 
 ## Requirements
 
@@ -16,6 +16,10 @@ The deployed render app for this project can be found here: and the sources file
 4. It authenticates users using JWT.
 5. The front-end is built using React. You can use a React framework (e.g. Create React App or Next.js) of your choice.
 6. The application allows for normal end-user access and admin access. An administrator should be able to monitor and make changes to users’ behaviour.
+
+## Deployment
+
+As Heroku is no longer free I couldn't follow the pdf tutorials, instead, I researched how to deploy an app on Render. I followed the tutorial at https://paragon.ba/en/how-to-deploy-a-mern-application-on-render-com/ which recommended deploying the backend on a public server for the front end. The back end is hosted at https://my-travel-diary-back-end.onrender.com/.
 
 ## Installation
 
